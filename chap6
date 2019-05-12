@@ -1,0 +1,202 @@
+#pp.126~132
+library(dplyr)
+exam <- read.csv("csv_exam.csv")
+exam
+
+dim(exam)
+exam %>%  filter(class ==6)
+exam %>% filter(class != 3)
+exam %>% filter(math > 60)
+exam %>% filter(math <50)
+exam %>% filter(english >= 80)
+exam %>% filter (english <= 80)
+exam %>% filter (class == 1 & math >=50)
+exam %>% filter(class == 2 & english >=80)
+exam %>% filter(math >=90 | english >=90)
+exam %>% filter(english <90 | science <50)
+exam %>% filter(class ==1 | class == 3 | class == 5)
+exam %>% filter(class %in% c(1, 2))
+c1 <-exam %>%  filter(class ==1)
+c2 <-exam %>%  filter(class ==2)
+mean(c1$math)
+mean(c2$science)
+
+#p.133 혼자서 해보기
+#Q1.
+library(ggplot2)
+mpg<- as.data.frame(ggplot2::mpg)
+m1 <-mpg %>% filter(displ <= 4)
+m2 <-mpg %>% filter(displ >= 5)
+mean(m1$hwy)
+mean(m2$hwy)
+
+#Q2.
+audi <-mpg %>% filter(manufacturer == "audi")
+toyota <- mpg %>% filter(manufacturer == "toyota")
+mean(audi$cty)
+mean(toyota$cty)
+
+#Q3.
+m <- mpg %>% filter(manufacturer %in% c("chevrolet", "ford", "honda"))
+mean(m$hwy)
+
+#pp.134~138
+exam
+exam %>% select(math)
+exam %>% select(english)
+exam %>% select(class, math, english)
+exam %>% select(-math)
+exam %>% select(-math, -class)
+exam %>%  
+  filter(class == 1) %>%  
+  select(english)
+exam %>% 
+  select(id, math) %>% 
+  head(10)
+
+#p.138 혼자서 해보기
+#Q1.
+new_mpg <- mpg %>% select(class, cty)
+new_mpg
+
+#Q2.
+n_suv <-new_mpg %>% filter(class == "suv")
+n_compact <- new_mpg %>% filter(class == "compact")
+mean(n_suv$cty)
+mean(n_compact$cty)
+
+#pp139~140
+exam %>% arrange(science)         #science 점수가 낮은 사람부터 출력(오름차순)
+exam %>% arrange(desc(math))      #math 점수가 높은 사람부터 출력(내림차순)
+exam %>% arrange(class, math)
+exam %>% arrange(class, desc(english))
+
+#p.141기 혼자서 해보기
+#Q1.
+a <- mpg %>% filter(manufacturer == "audi")
+a
+a %>%
+  arrange(desc(hwy)) %>% 
+  head(5)
+
+#pp.142~144
+exam %>% 
+  mutate(total = math + english + science) %>%
+  head                                         
+exam %>% 
+  mutate(totoal = math + english + science,
+         mean = (math + english + science)/3) %>% 
+  arrange(desc(mean)) %>% 
+  head(10)
+exam %>% 
+  mutate(test =ifelse(science >=60, "pass", "fail")) %>% 
+  head(10)
+
+#p.144 혼자서 해보기
+#Q1.
+n_mpg <- mpg
+n_mpg <-n_mpg %>% mutate(totaly = cty +hwy)
+n_mpg <-n_mpg %>% mutate(mean = totaly/2)
+n_mpg %>%
+  arrange(desc(totaly)) %>% 
+  head(3)
+n2_mpg <- mpg %>%
+  mutate(total = cty + hwy, mean = total/2) %>% 
+  arrange(desc(total)) %>% 
+  head(3)
+n2_mpg
+
+#pp.145~149
+exam %>% summarise(mean_math = mean(math))
+exam %>% 
+  group_by(class) %>% 
+  summarise(mean_math = mean(math))
+exam %>% 
+  group_by(class) %>% 
+  summarise(mean_math = mean(math),
+            sum_math = sum(math),
+            median_math = median(math),
+            n = n()) %>% 
+  arrange(desc(mean_math))
+mpg %>%
+  group_by(manufacturer, drv) %>% 
+  summarise(mean_cty = mean(cty)) %>% 
+  head(10)
+mpg %>% 
+  group_by(manufacturer) %>% 
+  filter(class == "suv") %>% 
+  mutate(tot = (cty+hwy)/2) %>% 
+  summarise(mean_tot = mean(tot)) %>% 
+  arrange(desc(mean_tot)) %>% 
+  head(5)
+
+#p.150 혼자서 해보기
+library(ggplot2)
+mpg<- as.data.frame(ggplot2::mpg)
+#Q1.
+mpg %>%
+  group_by(class) %>% 
+  summarise(mcty = mean(cty))
+
+#Q2.
+mpg %>% 
+  group_by(class) %>% 
+  summarise(mcty = mean(cty)) %>% 
+  arrange(desc(mcty))
+
+#Q3.
+mpg %>% 
+  group_by(manufacturer) %>% 
+  summarise(mhwy = mean(hwy)) %>% 
+  arrange(desc(mhwy)) %>% 
+  head(3)
+
+#Q4.
+mpg %>% 
+  filter(class == "compact") %>% 
+  group_by(manufacturer) %>% 
+  summarise(count = n()) %>% 
+  arrange(desc(count))
+
+#pp.152~155
+library(dplyr)
+df_t1 <- data.frame(id = c(1, 2, 3, 4, 5),
+                    midterm = c(60, 70, 80, 90, 85))
+df_t2 <- data.frame(id = c(1, 2, 3, 4, 5),
+                    final = c(70, 83, 65, 95, 80))
+df_t1
+df_t2
+total <- left_join(df_t1, df_t2, by = "id")
+total
+df_name <- data.frame(class = c(1, 2, 3, 4, 5),
+                      teacher = c("a", "b", "c", "d", "e"))
+df_name
+ex_name <- left_join(exam, df_name, by = "class")
+ex_name
+df_group1 <- data.frame(id = c(1, 2, 3, 4, 5),
+                        test = c(60, 70, 80, 90, 85))
+df_group2 <- data.frame(id = c(6, 7, 8, 9, 10),
+                        test = c(70, 83, 65, 95, 80))
+df_group1
+df_group2
+group_all <- bind_rows(df_group1, df_group2)
+group_all
+
+#pp.156~157 혼자서 해보기
+fuel <- data.frame(fl = c("c", "d", "e", "p", "r"),
+                   price_fl = c(2.35, 2.38, 2.11, 2.76, 2.22),
+                   stringsAsFactors = F)
+fuel
+#Q1.
+n <-left_join(mpg, fuel, by = "fl")
+
+#Q2.
+n %>% 
+  select(model, fl, price_fl) %>% 
+  head()
+
+
+
+
+
+
