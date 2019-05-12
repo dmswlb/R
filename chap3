@@ -1,0 +1,27 @@
+a <- 3
+a
+var1 <- c(1, 2, 3, 4, 5)
+var2 <- c(4, 3, 6, 7, 10)
+var1+var2
+str1 <- "hello world"
+str1
+str2 <- c("hi", "My", "name", "is", "han")
+str2
+str2_paste <- paste(str2, collapse =" ")
+str2_paste
+
+library(ggplot2)
+ex1 <- c("a", "b", "c", "a", "a", "c", "c", "c", "b")
+qplot(ex1)
+
+qplot(data =mpg, x =cty)
+qplot(data =mpg, x=drv, y =hwy)
+qplot(data =mpg, x= drv, y =hwy, geom ="line")
+qplot(data =mpg, x=drv, y=hwy, geom = "boxplot")
+qplot(data =mpg, x=drv, y=hwy, geom = "boxplot", colour =drv)
+
+# p77. 혼자서 해보기
+student_score <- c(80, 60, 70, 50, 90)
+mean(student_score)
+student_mean <- mean(student_score)
+student_mean
