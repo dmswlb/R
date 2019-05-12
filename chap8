@@ -1,0 +1,72 @@
+library(ggplot2)
+library(scales)
+library(RColorBrewer)
+#산점도
+ggplot(data = mpg, aes(x = displ, y = hwy))
+ggplot(data = mpg, aes(x= displ, y = hwy)) +geom_point()     #연속형, 연속형
+ggplot(data = mpg, aes(x= displ, y = class)) +geom_point()   #연속형, 범주형
+ggplot(data = mpg, aes(x = model , y = hwy)) +geom_point()   #범주형, 연속형
+ggplot(data = mpg, aes(x = model, y = class)) +geom_point()  #범주형, 범주형
+ggplot(data = mpg, aes(x= displ, y = hwy)) +geom_point() + xlim(3, 6)
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point() + 
+  xlim(3, 6) + 
+  ylim(10, 30)
+
+#p.188 혼자서 해보기
+#Q1.
+ggplot(data = mpg, aes(x = cty, y = hwy)) +
+  geom_point()
+
+#Q2.
+ggplot(data = midwest, aes(x = poptotal, y = popasian)) + 
+  geom_point() + 
+  xlim(0, 500000) +
+  ylim(0,10000)
+
+#막대 그래프
+library(dplyr)
+df_mpg <- mpg %>% 
+  group_by(drv) %>% 
+  summarise(mean_hwy = mean(hwy))
+df_mpg
+cm <- ggplot(data = df_mpg, aes(x= drv, y = mean_hwy, fill =drv)) + geom_col()
+cm <- cm + scale_fill_brewer(palette = "Blues")
+cm
+ggplot(data = df_mpg, aes(x = reorder(drv, mean_hwy), y = mean_hwy)) + geom_col()  #mean_hwy 기준 오름차순 정렬
+ggplot(data = df_mpg, aes(x = reorder(drv, -mean_hwy), y = mean_hwy)) + geom_col() #mean_hwy 기준 내림차순 정렬
+ggplot(data = df_mpg, aes(x = drv)) + geom_bar()
+
+df_mpg <- mpg %>%   select (model, class, hwy, cty) 
+ggplot(data = df_mpg, aes(x = model)) + geom_bar()    #x축: 범주형 
+ggplot(data = df_mpg, aes(x = cty)) + geom_bar()      #x축: 연속형
+
+#p.193 혼자서 해보기
+#Q1.
+q1 <-mpg %>% 
+  filter(class == "suv") %>% 
+  group_by(manufacturer) %>% 
+  summarise(ctymean = mean(cty)) %>% 
+  arrange(desc(ctymean)) %>% 
+  head(5) 
+q1
+ggplot(data = q1, aes(x= reorder(manufacturer, -ctymean), y = ctymean)) + geom_col()
+
+#Q2.
+nn <-ggplot(data = mpg, aes(x = class,fill =class)) + geom_bar()
+nn <- nn + scale_fill_brewer(palette = "Blues")
+nn
+#선 그래프    
+ggplot(data = economics, aes(x = date, y = unemploy)) + geom_line()
+
+#p.195 혼자서 해보기
+n_eco <- ggplot(data = economics, aes(x = date, y = psavert)) + geom_line()
+n_eco
+
+#상자 그림
+ggplot(data = mpg, aes(x = drv, y = hwy)) + geom_boxplot()
+
+#p.198 혼자서 해보기
+mc <- mpg %>% 
+  filter(class %in% c("compact", "subcompact", "suv"))
+ggplot(data=mc, aes(x = class, y = cty)) + geom_boxplot()
