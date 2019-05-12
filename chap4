@@ -1,0 +1,17 @@
+#p88. 혼자서 해보기
+name <- c("apple","Strawberry", "watermelon")
+price <- c(1800, 1500, 3000)
+sale <- c(24, 38, 13)
+df_fruit <- data.frame(name, price, sale)
+df_fruit
+price_mean <- mean(df_fruit$price)
+price_mean
+sale_mean <-mean(df_fruit$sale)
+sale_mean
+
+
+
+install.packages("readxl")
+library(readxl)
+df_ex <-read_excel("excel_exam.xlsx")
+df_ex
